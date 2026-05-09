@@ -11,6 +11,11 @@ from datetime import datetime
 from darts import TimeSeries
 from darts.models import ExponentialSmoothing
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 # FRED API request
 api_key = YOUR_KEY
 params = {
@@ -56,8 +61,8 @@ if response.status_code == 200:
     plt.show()
 
 else:
-    print(f"Error: {response.status_code}")
-    print(response.text)
+    logger.error(f"Error: {response.status_code}")
+    logger.info(response.text)
 
 # # Darts for Time Series Analysis in Python
 
@@ -164,8 +169,8 @@ if response.status_code == 200:
     plt.show()
 
 else:
-    print(f"Error: {response.status_code}")
-    print(response.text)
+    logger.error(f"Error: {response.status_code}")
+    logger.info(response.text)
 
 import requests
 import pandas as pd
@@ -199,8 +204,8 @@ if response.status_code == 200:
     series = TimeSeries.from_dataframe(df, "date", "value")
 
 else:
-    print(f"Error: {response.status_code}")
-    print(response.text)
+    logger.error(f"Error: {response.status_code}")
+    logger.info(response.text)
 
 """
 ARIMA
@@ -317,11 +322,11 @@ if __name__ == "__main__":
     try:
         # Step 1: Fetch data
         series = fetch_fred_data(series_id, api_key)
-        print("Data fetched successfully.")
+        logger.info("Data fetched successfully.")
 
         # Step 2: Build model and forecast
         forecast = build_and_forecast(series)
-        print("Forecast generated successfully.")
+        logger.info("Forecast generated successfully.")
 
         # Step 3: Visualize results
         visualize_forecast(
@@ -330,13 +335,13 @@ if __name__ == "__main__":
             "10-Year Treasury Constant Maturity Minus 2-Year Treasury Constant Maturity",
             "ARIMA_Forecast.png",
         )
-        print("Visualization completed and saved.")
+        logger.info("Visualization completed and saved.")
 
-        print("\nForecast for the next 30 periods:")
-        print(forecast)
+        logger.info("\nForecast for the next 30 periods:")
+        logger.info(forecast)
 
     except Exception as e:
-        print(f"An error occurred: {str(e)}")
+        logger.error(f"An error occurred: {str(e)}")
 
 import warnings
 import requests
@@ -399,7 +404,7 @@ def fetch_fred_data(series_id, api_key, start_date="2000-01-01", save_csv=False)
         if save_csv:
             csv_filename = f"{series_id}_data.csv"
             df.to_csv(csv_filename, encoding="utf-8")
-            print(f"Data saved to {csv_filename}")
+            logger.info(f"Data saved to {csv_filename}")
 
         return df
     else:
@@ -439,7 +444,7 @@ if __name__ == "__main__":
 
     # Fetch data from FRED
     df = fetch_fred_data(series_id, api_key)
-    print("Data fetched successfully.")
+    logger.info("Data fetched successfully.")
 
     # Create TimeSeries
     series = TimeSeries.from_dataframe(df, "date", "value")
@@ -503,7 +508,7 @@ if __name__ == "__main__":
     )
     display_forecast(future_predictions, series_original, "future")
 
-    print("Forecasting completed and visualizations saved.")
+    logger.info("Forecasting completed and visualizations saved.")
 
 """
 works
@@ -569,7 +574,7 @@ def fetch_fred_data(series_id, api_key, start_date="2000-01-01", save_csv=False)
         if save_csv:
             csv_filename = f"{series_id}_data.csv"
             df.to_csv(csv_filename, encoding="utf-8")
-            print(f"Data saved to {csv_filename}")
+            logger.info(f"Data saved to {csv_filename}")
 
         return df
     else:
@@ -598,7 +603,7 @@ def plot_forecast(train, val, pred, title):
     plt.tight_layout()
     plt.savefig(f"{title.replace(' ', '_')}.png")
     plt.show()
-    print(f"MAE: {mae(pred, val):.4f}")
+    logger.info(f"MAE: {mae(pred, val):.4f}")
 
 
 if __name__ == "__main__":
@@ -607,7 +612,7 @@ if __name__ == "__main__":
 
     # Fetch data from FRED
     df = fetch_fred_data(series_id, api_key)
-    print("Data fetched successfully.")
+    logger.info("Data fetched successfully.")
 
     # Resample the data to daily frequency, forward filling missing values
     df = df.resample("D").ffill()
@@ -691,7 +696,7 @@ if __name__ == "__main__":
     fft_trend_pred = model_fft_trend.predict(len(val))
     plot_forecast(train, val, fft_trend_pred, "FFT Forecast with Polynomial Trend")
 
-    print("Forecasting completed and visualizations saved.")
+    logger.info("Forecasting completed and visualizations saved.")
 
 import pandas as pd
 from darts import TimeSeries

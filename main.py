@@ -6,6 +6,12 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 # Add src to path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -122,7 +128,7 @@ def main() -> None:
     
     # Load series
     series = load_series(config)
-    print(f"Loaded {len(series)} data points")
+    logger.info(f"Loaded {len(series)} data points")
     
     # Convert to Darts TimeSeries
     ts = TimeSeries.from_series(series)
@@ -140,14 +146,14 @@ def main() -> None:
     
     results = []
     for model_cfg in models_config:
-        print(f"\nEvaluating {model_cfg['type']}...")
+        logger.info(f"\nEvaluating {model_cfg['type']}...")
         result = rolling_origin_eval(ts, model_cfg, horizon, n_splits)
         results.append(result)
-        print(f"  Mean MAE: {result.mean_mae:.4f}")
+        logger.info(f"  Mean MAE: {result.mean_mae:.4f}")
     
     # Find best model
     best_result = min(results, key=lambda r: r.mean_mae)
-    print(f"\nBest model: {best_result.model_name} (MAE: {best_result.mean_mae:.4f})")
+    logger.info(f"\nBest model: {best_result.model_name} (MAE: {best_result.mean_mae:.4f})")
     
     # Create visualization
     if best_result.y_true is not None and best_result.y_pred is not None:
@@ -170,10 +176,10 @@ def main() -> None:
         fig.tight_layout()
         output_dir = ensure_output_dir(get_output_dir(config, script_dir))
         save_plot(fig, output_dir / "darts_forecast.png", dpi=300)
-        print(f"\nPlot saved to: {output_dir / 'darts_forecast.png'}")
+        logger.info(f"\nPlot saved to: {output_dir / 'darts_forecast.png'}")
         plt.close(fig)
     
-    print("\n Darts analysis complete")
+    logger.info("\n Darts analysis complete")
 
 
 if __name__ == "__main__":
