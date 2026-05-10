@@ -119,7 +119,7 @@ def rolling_origin_eval(
     )
 
 
-def main() -> None:
+def main(plot: bool = False) -> None:
     """Main execution function."""
     script_dir = Path(__file__).parent
     
@@ -157,27 +157,28 @@ def main() -> None:
     
     # Create visualization
     if best_result.y_true is not None and best_result.y_pred is not None:
-        fig, ax = plt.subplots(figsize=(10, 5))
+    if plot:
+            fig, ax = plt.subplots(figsize=(10, 5))
         
         # Plot history
-        history = ts[-100:] if len(ts) > 100 else ts
-        ax.plot(history.time_index, history.values().flatten(), "k-", lw=1.5, label="History", alpha=0.8)
+            history = ts[-100:] if len(ts) > 100 else ts
+            ax.plot(history.time_index, history.values().flatten(), "k-", lw=1.5, label="History", alpha=0.8)
         
         # Plot actual and forecast
-        ax.plot(best_result.y_true.time_index, best_result.y_true.values().flatten(), "b-", lw=1.8, label="Actual", alpha=0.8)
-        ax.plot(best_result.y_pred.time_index, best_result.y_pred.values().flatten(), "r--", lw=2.0, label=f"{best_result.model_name} Forecast", alpha=0.8)
+            ax.plot(best_result.y_true.time_index, best_result.y_true.values().flatten(), "b-", lw=1.8, label="Actual", alpha=0.8)
+            ax.plot(best_result.y_pred.time_index, best_result.y_pred.values().flatten(), "r--", lw=2.0, label=f"{best_result.model_name} Forecast", alpha=0.8)
         
-        ax.set_title(f"Best Model: {best_result.model_name} (MAE: {best_result.mean_mae:.4f})")
-        ax.set_xlabel("Date")
-        ax.set_ylabel("Value")
-        ax.legend(loc="best")
-        ax.grid(True, alpha=0.3)
+            ax.set_title(f"Best Model: {best_result.model_name} (MAE: {best_result.mean_mae:.4f})")
+            ax.set_xlabel("Date")
+            ax.set_ylabel("Value")
+            ax.legend(loc="best")
+            ax.grid(True, alpha=0.3)
         
-        fig.tight_layout()
-        output_dir = ensure_output_dir(get_output_dir(config, script_dir))
-        save_plot(fig, output_dir / "darts_forecast.png", dpi=300)
-        logger.info(f"\nPlot saved to: {output_dir / 'darts_forecast.png'}")
-        plt.close(fig)
+            fig.tight_layout()
+            output_dir = ensure_output_dir(get_output_dir(config, script_dir))
+            save_plot(fig, output_dir / "darts_forecast.png", dpi=300)
+            logger.info(f"\nPlot saved to: {output_dir / 'darts_forecast.png'}")
+            plt.close(fig)
     
     logger.info("\n Darts analysis complete")
 
