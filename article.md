@@ -8,7 +8,7 @@ Darts provides a unified API for a variety of time series models, allowing us to
 
 Let's try it out. Install Darts with:
 
-    pip install darts
+pip install darts
 
 # Basic Workflow
 
@@ -50,106 +50,72 @@ Darts makes it easy to evaluate model performance using metrics like MAE, RMSE, 
 
 I pulled data for energy load in ERCOT for every 15 minutes from December 24, 2024, to January 11, 2025. Then, I repeated these steps using the new dataset.
 
-    import pandas as pd
-    import matplotlib.pyplot as plt
-    from darts import TimeSeries
-    from darts.models import ExponentialSmoothing
-    from darts.metrics import mape
+import pandas as pd import matplotlib.pyplot as plt from darts import TimeSeries from darts.models import ExponentialSmoothing from darts.metrics import mape
 
     # Load the ERCOT data
-    df = pd.read_csv("ercot_load_data.csv")
-    df['date'] = pd.to_datetime(df['date'])  # Ensure 'date' is in datetime format
-    df['values'] = pd.to_numeric(df['values'], errors='coerce')  # Convert 'values' to numeric
-    df = df.sort_values('date')  # Sort by date
+df = pd.read_csv("ercot_load_data.csv") df['date'] = pd.to_datetime(df['date']) # Ensure 'date' is in datetime format df['values'] = pd.to_numeric(df['values'], errors='coerce') # Convert 'values' to numeric df = df.sort_values('date') # Sort by date
 
     # Drop rows with missing or NaN values
-    df = df.dropna()
+df = df.dropna()
 
     # Resample the data to hourly frequency
-    df = df.set_index('date').resample('h').mean().reset_index()  # Resample and take the mean for each hour
+df = df.set_index('date').resample('h').mean().reset_index() # Resample and take the mean for each hour
 
     # Define hold-out period
-    hold_out_hours = 24  # 24 hours = 1 day
-    train = df.iloc[:-hold_out_hours]
-    hold_out = df.iloc[-hold_out_hours:]
+hold_out_hours = 24 # 24 hours = 1 day train = df.iloc[:-hold_out_hours] hold_out = df.iloc[-hold_out_hours:]
 
     # Create TimeSeries for training and hold-out data
-    series_train = TimeSeries.from_dataframe(train, 'date', 'values', freq="h", fill_missing_dates=True)
-    series_hold_out = TimeSeries.from_dataframe(hold_out, 'date', 'values', freq="h")
+series_train = TimeSeries.from_dataframe(train, 'date', 'values', freq="h", fill_missing_dates=True) series_hold_out = TimeSeries.from_dataframe(hold_out, 'date', 'values', freq="h")
 
     # Fit the Exponential Smoothing model on training data
-    model = ExponentialSmoothing()
-    model.fit(series_train)
+model = ExponentialSmoothing() model.fit(series_train)
 
     # Forecast the hold-out period
-    forecast = model.predict(len(series_hold_out))
+forecast = model.predict(len(series_hold_out))
 
     # Calculate MAPE
-    mape = mape(series_hold_out, forecast)
+mape = mape(series_hold_out, forecast)
 
     # Plot the results
-    plt.figure(figsize=(12, 6))
+plt.figure(figsize=(12, 6))
 
     # Plot training data
-    series_train.plot(label="Training Data", color='blue')
+series_train.plot(label="Training Data", color='blue')
 
     # Plot hold-out data
-    series_hold_out.plot(label="Hold-Out Data (Actual)", color='green')
+series_hold_out.plot(label="Hold-Out Data (Actual)", color='green')
 
     # Plot forecasted data
-    forecast.plot(label="Forecast", color='red')
+forecast.plot(label="Forecast", color='red')
 
-    plt.title(f"ERCOT Hourly Load Forecast with Hold-Out Data \n MAPE: {mape:.2f}%")
-    plt.xlabel("Date")
-    plt.ylabel("Load Values")
-    plt.legend()
-    plt.grid(True)
-    plt.tight_layout()
-    plt.savefig("ERCOT_Hourly_HoldOut_Forecast.png")
-    plt.show()
+plt.title(f"ERCOT Hourly Load Forecast with Hold-Out Data \n MAPE: {mape:.2f}%") plt.xlabel("Date") plt.ylabel("Load Values") plt.legend() plt.grid(True) plt.tight_layout() plt.savefig("ERCOT_Hourly_HoldOut_Forecast.png") plt.show()
 
 ![image](img/ERCOT_Hourly_HoldOut_Forecast.png)
 
 The exponential smoothing works better than ARIMA on this dataset.
 
-    import pandas as pd
-    import matplotlib.pyplot as plt
-    from darts import TimeSeries
-    from darts.models import ARIMA
+import pandas as pd import matplotlib.pyplot as plt from darts import TimeSeries from darts.models import ARIMA
 
     # Define hold-out period
-    hold_out_hours = 24  # Example: 24 hours = 1 day
-    train = df.iloc[:-hold_out_hours]
-    hold_out = df.iloc[-hold_out_hours:]
+hold_out_hours = 24 # Example: 24 hours = 1 day train = df.iloc[:-hold_out_hours] hold_out = df.iloc[-hold_out_hours:]
 
     # Create TimeSeries for training and hold-out data
-    series_train = TimeSeries.from_dataframe(train, 'date', 'values', freq="h", fill_missing_dates=True)
-    series_hold_out = TimeSeries.from_dataframe(hold_out, 'date', 'values', freq="h")
+series_train = TimeSeries.from_dataframe(train, 'date', 'values', freq="h", fill_missing_dates=True) series_hold_out = TimeSeries.from_dataframe(hold_out, 'date', 'values', freq="h")
 
     # Fit the ARIMA model
-    model = ARIMA(p=1, d=1, q=1)  # You can adjust p, d, q parameters
-    model.fit(series_train)
+model = ARIMA(p=1, d=1, q=1) # You can adjust p, d, q parameters model.fit(series_train)
 
     # Forecast the hold-out period
-    forecast = model.predict(len(series_hold_out))
+forecast = model.predict(len(series_hold_out))
     # Calculate MAPE
-    mape_result = mape(series_hold_out, forecast)
+mape_result = mape(series_hold_out, forecast)
 
     # Plot the results
-    plt.figure(figsize=(12, 6))
+plt.figure(figsize=(12, 6))
 
-    series_train.plot(label="Training Data", color='blue')
-    series_hold_out.plot(label="Hold-Out Data (Actual)", color='green')
-    forecast.plot(label="Forecast", color='red')
+series_train.plot(label="Training Data", color='blue') series_hold_out.plot(label="Hold-Out Data (Actual)", color='green') forecast.plot(label="Forecast", color='red')
 
-    plt.title(f"ERCOT Hourly Load Forecast with ARIMA and Hold-Out Period \n MAPE: {mape_result:.2f}%")
-    plt.xlabel("Date")
-    plt.ylabel("Load Values")
-    plt.legend()
-    plt.grid(True)
-    plt.tight_layout()
-    plt.savefig("ARIMA_Hourly_HoldOut_Forecast.png")
-    plt.show()
+plt.title(f"ERCOT Hourly Load Forecast with ARIMA and Hold-Out Period \n MAPE: {mape_result:.2f}%") plt.xlabel("Date") plt.ylabel("Load Values") plt.legend() plt.grid(True) plt.tight_layout() plt.savefig("ARIMA_Hourly_HoldOut_Forecast.png") plt.show()
 
 ![image](img/ARIMA_Hourly_HoldOut_Forecast.png)
 
@@ -171,143 +137,70 @@ This is an earlier version of the project. I was experimenting with smoothing op
 
 Our analysis implements multiple forecasting models:
 
-    import pandas as pd
-    import numpy as np
-    import matplotlib.pyplot as plt
-    from darts import TimeSeries
-    from darts.models import ARIMA, Theta, TBATS
-    from darts.metrics import mape, rmse
-    from darts.utils.utils import SeasonalityMode
-    import warnings
+import pandas as pd import numpy as np import matplotlib.pyplot as plt from darts import TimeSeries from darts.models import ARIMA, Theta, TBATS from darts.metrics import mape, rmse from darts.utils.utils import SeasonalityMode import warnings
 
-    warnings.filterwarnings('ignore')
+warnings.filterwarnings('ignore')
 
 ## TimeSeriesAnalyzer Class
 
 The following class is used to load the data, train models, and evaluate their performance:
 
-    class TimeSeriesAnalyzer:
-        def __init__(self):
-            self.models = {
-                'ARIMA': ARIMA(p=2, d=1, q=2, seasonal_order=(1, 1, 1, 11)),
-                'Theta': Theta(season_mode=SeasonalityMode.ADDITIVE, seasonality_period=11),
-                'TBATS': TBATS(use_trend=True, use_box_cox=False, seasonal_periods=[11])
-            }
+class TimeSeriesAnalyzer: def __init__(self): self.models = { 'ARIMA': ARIMA(p=2, d=1, q=2, seasonal_order=(1, 1, 1, 11)), 'Theta': Theta(season_mode=SeasonalityMode.ADDITIVE, seasonality_period=11), 'TBATS': TBATS(use_trend=True, use_box_cox=False, seasonal_periods=[11]) }
 
-        def _load_csv_data(self, filepath):
-            """Load and prepare sunspot data."""
-            try:
+def _load_csv_data(self, filepath): """Load and prepare sunspot data.""" try:
                 # Read the CSV file with the new format
-                df = pd.read_csv(filepath)
+df = pd.read_csv(filepath)
 
                 # Split the Month column into Year and Month
-                df[['Year', 'Month']] = df['Month'].str.split('-', expand=True)
+df[['Year', 'Month']] = df['Month'].str.split('-', expand=True)
 
                 # Convert to proper datetime
-                df['Date'] = pd.to_datetime(df['Year'] + '-' + df['Month'] + '-01')
+df['Date'] = pd.to_datetime(df['Year'] + '-' + df['Month'] + '-01')
 
                 # Replace 0 values with 1 to avoid log transform issues
-                df['Sunspot'] = np.where(df['Sunspot'] == 0, 1, df['Sunspot'])
+df['Sunspot'] = np.where(df['Sunspot'] == 0, 1, df['Sunspot'])
 
                 # Convert to yearly averages
-                df_yearly = df.groupby(df['Date'].dt.year)['Sunspot'].mean().reset_index()
-                df_yearly['Date'] = pd.to_datetime(df_yearly['Date'].astype(str) + '-01-01')
+df_yearly = df.groupby(df['Date'].dt.year)['Sunspot'].mean().reset_index() df_yearly['Date'] = pd.to_datetime(df_yearly['Date'].astype(str) + '-01-01')
 
                 # Create TimeSeries object
-                series = TimeSeries.from_dataframe(df_yearly, 'Date', 'Sunspot')
+series = TimeSeries.from_dataframe(df_yearly, 'Date', 'Sunspot')
 
-                return series
+return series
 
-            except Exception as e:
-                print(f"Error loading data: {str(e)}")
-                return None
+except Exception as e: print(f"Error loading data: {str(e)}") return None
 
-        def load_data(self, filepath=None):
-            return self._load_csv_data(filepath)
+def load_data(self, filepath=None): return self._load_csv_data(filepath)
 
-        def analyze(self, series, train_test_split=0.8):
-            """Train models and evaluate predictions"""
-            if series is None:
-                print("No data to analyze")
-                return None, None, None
+def analyze(self, series, train_test_split=0.8): """Train models and evaluate predictions""" if series is None: print("No data to analyze") return None, None, None
 
-            train_size = int(len(series) * train_test_split)
-            train = series[:train_size]
-            test = series[train_size:]
+train_size = int(len(series) * train_test_split) train = series[:train_size] test = series[train_size:]
 
-            results = {}
-            for name, model in self.models.items():
-                print(f"\nTraining {name}...")
-                try:
-                    model.fit(train)
-                    pred = model.predict(len(test))
-                    metrics = self._calculate_metrics(test, pred)
-                    results[name] = {'prediction': pred, **metrics}
-                    self._print_metrics(name, metrics)
-                except Exception as e:
-                    print(f"Error training {name}: {str(e)}")
-                    continue
+results = {} for name, model in self.models.items(): print(f"\nTraining {name}...") try: model.fit(train) pred = model.predict(len(test)) metrics = self._calculate_metrics(test, pred) results[name] = {'prediction': pred, **metrics} self._print_metrics(name, metrics) except Exception as e: print(f"Error training {name}: {str(e)}") continue
 
-            return results, train, test
+return results, train, test
 
-        def _calculate_metrics(self, actual, predicted):
-            try:
-                return {
-                    'MAPE': mape(actual, predicted),
-                    'RMSE': rmse(actual, predicted),
-                }
-            except Exception as e:
-                print(f"Error calculating metrics: {str(e)}")
-                return {'MAPE': np.nan, 'RMSE': np.nan}
+def _calculate_metrics(self, actual, predicted): try: return { 'MAPE': mape(actual, predicted), 'RMSE': rmse(actual, predicted), } except Exception as e: print(f"Error calculating metrics: {str(e)}") return {'MAPE': np.nan, 'RMSE': np.nan}
 
-        def _print_metrics(self, model_name, metrics):
-            print(f"{model_name} Performance:")
-            for metric, value in metrics.items():
-                if not np.isnan(value):
-                    print(f"{metric}: {value:.2f}")
+def _print_metrics(self, model_name, metrics): print(f"{model_name} Performance:") for metric, value in metrics.items(): if not np.isnan(value): print(f"{metric}: {value:.2f}")
 
-        def plot_results(self, series, results, train, test, save_path='forecast.png'):
-            """Plot predictions from all models"""
-            if series is None or results is None:
-                print("No data to plot")
-                return
+def plot_results(self, series, results, train, test, save_path='forecast.png'): """Plot predictions from all models""" if series is None or results is None: print("No data to plot") return
 
-            plt.figure(figsize=(15, 7))
-            train.plot(label='Training', alpha=0.6)
-            test.plot(label='Test', alpha=0.6)
+plt.figure(figsize=(15, 7)) train.plot(label='Training', alpha=0.6) test.plot(label='Test', alpha=0.6)
 
-            if results:
-                colors = plt.cm.rainbow(np.linspace(0, 1, len(results)))
-                for (name, result), color in zip(results.items(), colors):
-                    if 'prediction' in result:
-                        result['prediction'].plot(
-                            label=f'{name} (MAPE: {result["MAPE"]:.1f}%)',
-                            color=color
-                        )
+if results: colors = plt.cm.rainbow(np.linspace(0, 1, len(results))) for (name, result), color in zip(results.items(), colors): if 'prediction' in result: result['prediction'].plot( label=f'{name} (MAPE: {result["MAPE"]:.1f}%)', color=color )
 
-            plt.title('Sunspot Number Forecasting Comparison')
-            plt.xlabel('Time')
-            plt.ylabel('Sunspot Number')
-            plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
-            plt.grid(True, alpha=0.3)
-            plt.tight_layout()
-            plt.savefig(save_path, bbox_inches='tight')
-            plt.close()
+plt.title('Sunspot Number Forecasting Comparison') plt.xlabel('Time') plt.ylabel('Sunspot Number') plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left') plt.grid(True, alpha=0.3) plt.tight_layout() plt.savefig(save_path, bbox_inches='tight') plt.close()
 
 ## Main Function
 
 The main function loads the data, performs the analysis, and plots the results:
 
-    def main():
-        analyzer = TimeSeriesAnalyzer()
+def main(): analyzer = TimeSeriesAnalyzer()
 
-        real_series = analyzer.load_data("SN_m_tot_V2.0.csv")
-        real_results, real_train, real_test = analyzer.analyze(real_series)
-        analyzer.plot_results(real_series, real_results,
-                                    real_train, real_test, 'sunspot_forecast.png')
+real_series = analyzer.load_data("SN_m_tot_V2.0.csv") real_results, real_train, real_test = analyzer.analyze(real_series) analyzer.plot_results(real_series, real_results, real_train, real_test, 'sunspot_forecast.png')
 
-    if __name__ == "__main__":
-        main()
+if __name__ == "__main__": main()
 
 ![image](img/1_VMkeAvN3kpJnGxzLVMorxg.png)
 
@@ -337,7 +230,7 @@ There are several ways to call an N-BEATS model. I prefer using the Darts librar
 
 Ensure you have Darts installed:
 
-    pip install darts
+pip install darts
 
 ## Univariate Forecasting and Backtesting with N-BEATS
 
