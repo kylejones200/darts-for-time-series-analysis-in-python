@@ -74,8 +74,6 @@ import logging
 
 logging.disable(logging.CRITICAL)
 
-import matplotlib.pyplot as plt
-import pandas as pd
 
 from darts.dataprocessing import Pipeline
 from darts.dataprocessing.transformers import (
@@ -85,11 +83,8 @@ from darts.dataprocessing.transformers import (
     Scaler,
 )
 from darts.metrics import mape
-from darts.models import ExponentialSmoothing
 from darts.utils.timeseries_generation import linear_timeseries
 
-import matplotlib.pyplot as plt
-from darts.models import ExponentialSmoothing
 
 # Fit the model and predict the next 10 steps
 model = ExponentialSmoothing()
@@ -114,11 +109,6 @@ plt.show()
 Stuck forecast
 """
 
-import requests
-import pandas as pd
-import matplotlib.pyplot as plt
-from datetime import datetime
-from darts import TimeSeries
 from darts.models import ARIMA
 
 # FRED API request (as before)
@@ -173,10 +163,6 @@ else:
     logger.error(f"Error: {response.status_code}")
     logger.info(response.text)
 
-import requests
-import pandas as pd
-from datetime import datetime
-from darts import TimeSeries
 
 api_key = YOUR_KEY
 params = {
@@ -212,10 +198,7 @@ else:
 ARIMA
 """
 
-import matplotlib.pyplot as plt
 
-from darts import TimeSeries
-from darts.models import ARIMA
 
 
 # Fit the ARIMA model and predict the next 30 steps with 1000 samples
@@ -237,7 +220,6 @@ plt.tight_layout()
 plt.savefig("ARIMA_Forecast.png")
 plt.show()
 
-from darts.models import ExponentialSmoothing
 
 # Fit the model and predict the next 365 steps
 model = ExponentialSmoothing()
@@ -258,12 +240,6 @@ plt.savefig("ExponentialSmoothing.png")
 plt.tight_layout()
 plt.show()
 
-import requests
-import pandas as pd
-import matplotlib.pyplot as plt
-from datetime import datetime
-from darts import TimeSeries
-from darts.models import ARIMA
 
 
 def fetch_fred_data(series_id, api_key, start_date="2000-01-01"):
@@ -344,26 +320,16 @@ if __name__ == "__main__":
     except Exception as e:
         logger.error(f"An error occurred: {str(e)}")
 
-import warnings
-import requests
-import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
-from datetime import datetime
-from darts import TimeSeries
 from darts.dataprocessing.transformers import MissingValuesFiller, Scaler
 from darts.metrics import r2_score
 from darts.models import NBEATSModel
 from darts.utils.callbacks import TFMProgressBar
 
 warnings.filterwarnings("ignore")
-import logging
 
 logging.disable(logging.CRITICAL)
 
-import requests
-import pandas as pd
-from datetime import datetime
 
 
 def fetch_fred_data(series_id, api_key, start_date="2000-01-01", save_csv=False):
@@ -515,26 +481,13 @@ if __name__ == "__main__":
 works
 """
 
-import warnings
-import requests
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-from datetime import datetime
-from darts import TimeSeries
-from darts.dataprocessing.transformers import MissingValuesFiller, Scaler
 from darts.metrics import mae, r2_score
 from darts.models import NBEATSModel, FFT
-from darts.utils.callbacks import TFMProgressBar
 
 warnings.filterwarnings("ignore")
-import logging
 
 logging.disable(logging.CRITICAL)
 
-import requests
-import pandas as pd
-from datetime import datetime
 
 
 def fetch_fred_data(series_id, api_key, start_date="2000-01-01", save_csv=False):
@@ -699,8 +652,6 @@ if __name__ == "__main__":
 
     logger.info("Forecasting completed and visualizations saved.")
 
-import pandas as pd
-from darts import TimeSeries
 
 # Create a Pandas DataFrame
 date_range = pd.date_range(start="2023-01-01", periods=50, freq="D")
@@ -713,7 +664,6 @@ series.head()
 """Simple Forecasting with Darts
 Darts supports traditional methods like Exponential Smoothing and ARIMA for quick, interpretable forecasts.
 Exponential Smoothing"""
-from darts.models import ExponentialSmoothing
 
 # Fit the model and predict the next 10 steps
 model = ExponentialSmoothing()
@@ -724,7 +674,6 @@ forecast = model.predict(10)
 series.plot(label="Actual")
 forecast.plot(label="Forecast")
 """ARIMA"""
-from darts.models import ARIMA
 
 # Fit the ARIMA model
 model = ARIMA(1, 1, 1)
