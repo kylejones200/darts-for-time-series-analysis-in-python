@@ -4,6 +4,7 @@
 #
 # FRED provides this data by API. You can request an API key for free.
 
+import os
 import requests
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -317,7 +318,7 @@ def visualize_forecast(series, forecast, title, filename, plot: bool = False):
 
 # Main execution
 if __name__ == "__main__":
-    api_key = "8f058d10ec8c788296c040ea09e634d5"
+    api_key = os.getenv("FRED_API_KEY", "")
     series_id = "T10Y2Y"
 
     try:
@@ -441,7 +442,7 @@ def display_forecast(pred_series, ts_transformed, forecast_type, start_date=None
 
 
 if __name__ == "__main__":
-    api_key = "8f058d10ec8c788296c040ea09e634d5"
+    api_key = os.getenv("FRED_API_KEY", "")
     series_id = "T10Y2Y"
 
     # Fetch data from FRED
@@ -610,7 +611,7 @@ def plot_forecast(train, val, pred, title, plot: bool = False):
 
 
 if __name__ == "__main__":
-    api_key = "8f058d10ec8c788296c040ea09e634d5"
+    api_key = os.getenv("FRED_API_KEY", "")
     series_id = "T10Y2Y"
 
     # Fetch data from FRED

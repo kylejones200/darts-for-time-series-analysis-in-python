@@ -1,5 +1,6 @@
 # Forecasting the U.S. Treasury Yield Spread using Darts
 
+import os
 import warnings
 
 warnings.filterwarnings("ignore")
@@ -73,7 +74,7 @@ def torch_config():
 
 
 if __name__ == "__main__":
-    api_key = "8f058d10ec8c788296c040ea09e634d5"
+    api_key = os.getenv("FRED_API_KEY", "")
     series_id = "T10Y2Y"
 
     # Get data
