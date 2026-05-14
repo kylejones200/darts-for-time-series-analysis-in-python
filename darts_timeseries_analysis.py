@@ -316,7 +316,7 @@ if __name__ == "__main__":
         logger.info(forecast)
 
     except Exception as e:
-        logger.error(f"An error occurred: {str(e)}")
+        logger.error(f"An error occurred: {str(e, exc_info=True)}")
 
 import numpy as np
 from darts.dataprocessing.transformers import MissingValuesFiller, Scaler
