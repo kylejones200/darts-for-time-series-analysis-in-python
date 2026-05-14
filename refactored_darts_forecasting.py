@@ -1,12 +1,10 @@
 # Forecasting the U.S. Treasury Yield Spread using Darts
 
 import os
-import warnings
 
-warnings.filterwarnings("ignore")
 import logging
 
-logging.disable(logging.CRITICAL)
+logging.getLogger("py.warnings").setLevel(logging.ERROR)
 
 import pandas as pd
 import numpy as np
