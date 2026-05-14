@@ -119,7 +119,7 @@ plt.title(f"ERCOT Hourly Load Forecast with ARIMA and Hold-Out Period \n MAPE: {
 
 ![image](img/ARIMA_Hourly_HoldOut_Forecast.png)
 
-But wait, there's more! Darts has tools for **Backtesting** to evaluate how well a model performs over historical data. It can perform **Transformations** like scaling, log-transforming, or normalizing data before modeling. And it supports **Ensembling** to combine multiple models for better forecasts.
+But wait, there's more! Darts has tools for Backtesting to evaluate how well a model performs over historical data. It can perform Transformations like scaling, log-transforming, or normalizing data before modeling. And it supports Ensembling to combine multiple models for better forecasts.
 
 # Deployment with Darts
 
@@ -216,11 +216,11 @@ N-BEATS is also a general-purpose model. It autonomously decomposes time series 
 
 It is recursive, which is unique, and allows it to generate predictions over extended time horizons. N-BEATS stacks multiple fully connected layers organized into blocks. Each block learns a specific pattern (e.g., trend or seasonality). The process works as follows:
 
-- **Backward Pass:** Learns past components of the time series.
+- Backward Pass: Learns past components of the time series.
 
-- **Forward Pass:** Projects future components for forecasting.
+- Forward Pass: Projects future components for forecasting.
 
-- **Residuals:** Adjusts for any remaining unexplained variance.
+- Residuals: Adjusts for any remaining unexplained variance.
 
 Let's try it.
 
@@ -234,7 +234,7 @@ pip install darts
 
 ## Univariate Forecasting and Backtesting with N-BEATS
 
-**Backtest Results:**
+Backtest Results:
 
 - MAPE: 10.35%
 
@@ -250,7 +250,7 @@ pip install darts
 
 N-BEATS can handle multiple variables to improve predictions for complex datasets.
 
-**Backtest Results:**
+Backtest Results:
 
 - MAPE: 10.35%
 
@@ -264,17 +264,17 @@ N-BEATS can handle multiple variables to improve predictions for complex dataset
 
 N-BEATS offers a trifecta of advantages for time series forecasting:
 
-- **Flexible:** Can be used with a range of data types without requiring extensive customization.
+- Flexible: Can be used with a range of data types without requiring extensive customization.
 
-- **Versatile:** Can be applied to various domains such as financial markets, weather patterns, and more.
+- Versatile: Can be applied to various domains such as financial markets, weather patterns, and more.
 
-- **Accurate:** Provides reliable and precise predictions.
+- Accurate: Provides reliable and precise predictions.
 
-**Bonus:** N-BEATS is surprisingly user-friendly.
+Bonus: N-BEATS is surprisingly user-friendly.
 
 ## Key Takeaways
 
-- **Backward Pass:** Learns past components of the time series.
-- **Forward Pass:** Projects future components for forecasting.
-- **Residuals:** Adjusts for any remaining unexplained variance.
+- Backward Pass: Learns past components of the time series.
+- Forward Pass: Projects future components for forecasting.
+- Residuals: Adjusts for any remaining unexplained variance.
 - MAPE: 10.35%
