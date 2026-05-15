@@ -5,16 +5,16 @@
 # FRED provides this data by API. You can request an API key for free.
 
 import os
-import requests
-import pandas as pd
-import matplotlib.pyplot as plt
 from datetime import datetime
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import requests
 from darts import TimeSeries
 from darts.models import ExponentialSmoothing
 
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 # FRED API request
@@ -76,7 +76,6 @@ logging.disable(logging.CRITICAL)
 
 import matplotlib.pyplot as plt
 import pandas as pd
-
 from darts.dataprocessing import Pipeline
 from darts.dataprocessing.transformers import (
     InvertibleMapper,
@@ -87,9 +86,6 @@ from darts.dataprocessing.transformers import (
 from darts.metrics import mape
 from darts.models import ExponentialSmoothing
 from darts.utils.timeseries_generation import linear_timeseries
-
-import matplotlib.pyplot as plt
-from darts.models import ExponentialSmoothing
 
 # Fit the model and predict the next 10 steps
 model = ExponentialSmoothing()
@@ -114,10 +110,11 @@ plt.show()
 Stuck forecast
 """
 
-import requests
-import pandas as pd
-import matplotlib.pyplot as plt
 from datetime import datetime
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import requests
 from darts import TimeSeries
 from darts.models import ARIMA
 
@@ -173,9 +170,10 @@ else:
     logger.error(f"Error: {response.status_code}")
     logger.info(response.text)
 
-import requests
-import pandas as pd
 from datetime import datetime
+
+import pandas as pd
+import requests
 from darts import TimeSeries
 
 api_key = YOUR_KEY
@@ -213,10 +211,8 @@ ARIMA
 """
 
 import matplotlib.pyplot as plt
-
 from darts import TimeSeries
 from darts.models import ARIMA
-
 
 # Fit the ARIMA model and predict the next 30 steps with 1000 samples
 model = ARIMA(p=1, d=1, q=1)  # Adjust these parameters as needed
@@ -258,10 +254,11 @@ plt.savefig("ExponentialSmoothing.png")
 plt.tight_layout()
 plt.show()
 
-import requests
-import pandas as pd
-import matplotlib.pyplot as plt
 from datetime import datetime
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import requests
 from darts import TimeSeries
 from darts.models import ARIMA
 
@@ -302,7 +299,9 @@ def visualize_forecast(series, forecast, title, filename, plot: bool = False):
     """Visualize the original series and forecast."""
     if plot:
         plt.figure(figsize=(12, 6))
-        series[-365:].plot(label="Actual", color="blue")  # Plot last year of actual data
+        series[-365:].plot(
+            label="Actual", color="blue"
+        )  # Plot last year of actual data
         forecast.plot(label="Forecast", color="red")
 
         plt.title(title)
@@ -345,11 +344,12 @@ if __name__ == "__main__":
         logger.error(f"An error occurred: {str(e)}")
 
 import warnings
-import requests
+from datetime import datetime
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from datetime import datetime
+import requests
 from darts import TimeSeries
 from darts.dataprocessing.transformers import MissingValuesFiller, Scaler
 from darts.metrics import r2_score
@@ -361,9 +361,10 @@ import logging
 
 logging.disable(logging.CRITICAL)
 
-import requests
-import pandas as pd
 from datetime import datetime
+
+import pandas as pd
+import requests
 
 
 def fetch_fred_data(series_id, api_key, start_date="2000-01-01", save_csv=False):
@@ -420,7 +421,9 @@ def generate_torch_kwargs():
     }
 
 
-def display_forecast(pred_series, ts_transformed, forecast_type, start_date=None, plot: bool = False):
+def display_forecast(
+    pred_series, ts_transformed, forecast_type, start_date=None, plot: bool = False
+):
     if plot:
         plt.figure(figsize=(12, 6))
         if start_date:
@@ -516,15 +519,16 @@ works
 """
 
 import warnings
-import requests
+from datetime import datetime
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from datetime import datetime
+import requests
 from darts import TimeSeries
 from darts.dataprocessing.transformers import MissingValuesFiller, Scaler
 from darts.metrics import mae, r2_score
-from darts.models import NBEATSModel, FFT
+from darts.models import FFT, NBEATSModel
 from darts.utils.callbacks import TFMProgressBar
 
 warnings.filterwarnings("ignore")
@@ -532,9 +536,10 @@ import logging
 
 logging.disable(logging.CRITICAL)
 
-import requests
-import pandas as pd
 from datetime import datetime
+
+import pandas as pd
+import requests
 
 
 def fetch_fred_data(series_id, api_key, start_date="2000-01-01", save_csv=False):

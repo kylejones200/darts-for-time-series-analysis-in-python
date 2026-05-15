@@ -1,26 +1,25 @@
 # Forecasting the U.S. Treasury Yield Spread using Darts
 
-import os
-
 import logging
+import os
 
 logging.getLogger("py.warnings").setLevel(logging.ERROR)
 
-import pandas as pd
-import matplotlib.pyplot as plt
 from datetime import datetime
-import requests
 
+import matplotlib.pyplot as plt
+import pandas as pd
+import requests
 from darts import TimeSeries
+from darts.dataprocessing.transformers import MissingValuesFiller, Scaler
 from darts.models import (
     ARIMA,
+    FFT,
     ExponentialSmoothing,
     LightGBMModel,
-    RNNModel,
-    FFT,
     NBEATSModel,
+    RNNModel,
 )
-from darts.dataprocessing.transformers import MissingValuesFiller, Scaler
 from darts.utils.callbacks import TFMProgressBar
 
 
