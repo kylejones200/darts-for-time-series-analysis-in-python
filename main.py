@@ -156,7 +156,7 @@ def main(plot: bool = False) -> None:
     
     # Create visualization
     if best_result.y_true is not None and best_result.y_pred is not None:
-    if plot:
+        if plot:
             fig, ax = plt.subplots(figsize=(10, 5))
         
         # Plot history
