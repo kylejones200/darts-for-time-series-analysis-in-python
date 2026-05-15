@@ -7,7 +7,6 @@ import logging
 logging.getLogger("py.warnings").setLevel(logging.ERROR)
 
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
 import requests
@@ -22,7 +21,6 @@ from darts.models import (
     NBEATSModel,
 )
 from darts.dataprocessing.transformers import MissingValuesFiller, Scaler
-from darts.metrics import mae, mape, r2_score
 from darts.utils.callbacks import TFMProgressBar
 
 
