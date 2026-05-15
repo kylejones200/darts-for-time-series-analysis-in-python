@@ -37,7 +37,6 @@ from sklearn.model_selection import TimeSeriesSplit
 from darts import TimeSeries
 from darts.models import ARIMA, ExponentialSmoothing, NaiveSeasonal, Theta
 
-np.random.seed(42)
 
 
 MODEL_REGISTRY = {
@@ -119,6 +118,7 @@ def rolling_origin_eval(
 
 
 def main(plot: bool = False) -> None:
+    np.random.seed(42)
     """Main execution function."""
     script_dir = Path(__file__).parent
     
