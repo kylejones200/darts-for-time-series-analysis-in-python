@@ -101,7 +101,7 @@ def rolling_origin_eval(
         mae_val = mean_absolute_error(
             future_ts.values().flatten(), forecast.values().flatten()
         )
-        pd.concat([maes, mae_val])
+        maes.append(mae_val)
 
         last_true = future_ts
         last_pred = forecast
@@ -149,7 +149,7 @@ def main(plot: bool = False) -> None:
     for model_cfg in models_config:
         logger.info(f"\nEvaluating {model_cfg['type']}...")
         result = rolling_origin_eval(ts, model_cfg, horizon, n_splits)
-        pd.concat([results, result])
+        results.append(result)
         logger.info(f"  Mean MAE: {result.mean_mae:.4f}")
 
     # Find best model

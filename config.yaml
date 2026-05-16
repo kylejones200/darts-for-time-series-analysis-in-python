@@ -41,3 +41,7 @@ models:
 output:
   save_predictions_csv: eia_preds_darts.csv
   output_dir: outputs
+cv:
+  n_splits: 5
+  strategy: time_series
+  gap: 0
