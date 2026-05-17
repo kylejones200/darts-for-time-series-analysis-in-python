@@ -67,7 +67,6 @@ else:
 
 # # Darts for Time Series Analysis in Python
 
-
 import logging
 
 logging.disable(logging.CRITICAL)
@@ -260,7 +259,6 @@ import requests
 from darts import TimeSeries
 from darts.models import ARIMA
 
-
 def fetch_fred_data(series_id, api_key, start_date="2000-01-01"):
     """Fetch data from FRED API."""
     params = {
@@ -284,14 +282,12 @@ def fetch_fred_data(series_id, api_key, start_date="2000-01-01"):
         return TimeSeries.from_dataframe(df, "date", "value")
     raise Exception(f"API request failed with status code {response.status_code}")
 
-
 def build_and_forecast(series, forecast_horizon=30, num_samples=1000):
     """Build ARIMA model and generate forecast."""
     model = ARIMA(p=1, d=1, q=1)  # You can adjust these parameters
     model.fit(series)
     forecast = model.predict(n=forecast_horizon, num_samples=num_samples)
     return forecast
-
 
 def visualize_forecast(series, forecast, title, filename, plot: bool = False):
     """Visualize the original series and forecast."""
@@ -310,7 +306,6 @@ def visualize_forecast(series, forecast, title, filename, plot: bool = False):
         plt.savefig(filename)
         plt.tight_layout()
         plt.show()
-
 
 # Main execution
 if __name__ == "__main__":
@@ -362,52 +357,6 @@ from datetime import datetime
 import pandas as pd
 import requests
 
-
-def fetch_fred_data(series_id, api_key, start_date="2000-01-01", save_csv=False):
-    """
-    Fetch data from FRED API, process it, and optionally save to CSV.
-
-    Args:
-    series_id (str): The FRED series ID.
-    api_key (str): Your FRED API key.
-    start_date (str): The start date for data retrieval (default: '2000-01-01').
-    save_csv (bool): Whether to save the data to a CSV file (default: False).
-
-    Returns:
-    pandas.DataFrame: Processed data from FRED API.
-    """
-    params = {
-        "series_id": series_id,
-        "api_key": api_key,
-        "file_type": "json",
-        "observation_start": start_date,
-        "observation_end": datetime.now().strftime("%Y-%m-%d"),
-    }
-    url = "https://api.stlouisfed.org/fred/series/observations"
-    response = requests.get(url, params=params)
-
-    if response.status_code == 200:
-        data = response.json()
-        observations = data["observations"]
-        df = pd.DataFrame(observations)
-        df["date"] = pd.to_datetime(df["date"])
-        df["value"] = pd.to_numeric(df["value"], errors="coerce")
-
-        # Drop rows with NaN values
-        df = df.dropna()
-
-        df = df.sort_values("date")
-        df = df.set_index("date")
-
-        if save_csv:
-            csv_filename = f"{series_id}_data.csv"
-            df.to_csv(csv_filename, encoding="utf-8")
-            logger.info(f"Data saved to {csv_filename}")
-
-        return df
-    raise Exception(f"API request failed with status code {response.status_code}")
-
-
 def generate_torch_kwargs():
     return {
         "pl_trainer_kwargs": {
@@ -415,7 +364,6 @@ def generate_torch_kwargs():
             "callbacks": [TFMProgressBar(enable_train_bar_only=True)],
         }
     }
-
 
 def display_forecast(
     pred_series, ts_transformed, forecast_type, start_date=None, plot: bool = False
@@ -436,7 +384,6 @@ def display_forecast(
         plt.tight_layout()
         plt.savefig(f"NBEATS_{forecast_type}_Forecast.png")
         plt.show()
-
 
 if __name__ == "__main__":
     api_key = os.getenv("FRED_API_KEY", "")
@@ -535,60 +482,6 @@ from datetime import datetime
 import pandas as pd
 import requests
 
-
-def fetch_fred_data(series_id, api_key, start_date="2000-01-01", save_csv=False):
-    """
-    Fetch data from FRED API, process it, and optionally save to CSV.
-
-    Args:
-    series_id (str): The FRED series ID.
-    api_key (str): Your FRED API key.
-    start_date (str): The start date for data retrieval (default: '2000-01-01').
-    save_csv (bool): Whether to save the data to a CSV file (default: False).
-
-    Returns:
-    pandas.DataFrame: Processed data from FRED API.
-    """
-    params = {
-        "series_id": series_id,
-        "api_key": api_key,
-        "file_type": "json",
-        "observation_start": start_date,
-        "observation_end": datetime.now().strftime("%Y-%m-%d"),
-    }
-    url = "https://api.stlouisfed.org/fred/series/observations"
-    response = requests.get(url, params=params)
-
-    if response.status_code == 200:
-        data = response.json()
-        observations = data["observations"]
-        df = pd.DataFrame(observations)
-        df["date"] = pd.to_datetime(df["date"])
-        df["value"] = pd.to_numeric(df["value"], errors="coerce")
-
-        # Drop rows with NaN values
-        df = df.dropna()
-        df = df.sort_values("date")
-        df = df.set_index("date")
-
-        if save_csv:
-            csv_filename = f"{series_id}_data.csv"
-            df.to_csv(csv_filename, encoding="utf-8")
-            logger.info(f"Data saved to {csv_filename}")
-
-        return df
-    raise Exception(f"API request failed with status code {response.status_code}")
-
-
-def generate_torch_kwargs():
-    return {
-        "pl_trainer_kwargs": {
-            "accelerator": "cpu",
-            "callbacks": [TFMProgressBar(enable_train_bar_only=True)],
-        }
-    }
-
-
 def plot_forecast(train, val, pred, title, plot: bool = False):
     if plot:
         plt.figure(figsize=(12, 6))
@@ -604,7 +497,6 @@ def plot_forecast(train, val, pred, title, plot: bool = False):
         plt.savefig(f"{title.replace(' ', '_')}.png")
         plt.show()
     logger.info(f"MAE: {mae(pred, val):.4f}")
-
 
 if __name__ == "__main__":
     api_key = os.getenv("FRED_API_KEY", "")
@@ -763,7 +655,6 @@ forecast = model.predict(len(val))
 # Plot the results
 series.plot(label="Actual")
 forecast.plot(label="Forecast")
-
 
 # %matplotlib inline  # Jupyter magic command - commented out for Python script
 training, validation = series.split_before(pd.Timestamp("2024-01-01"))
