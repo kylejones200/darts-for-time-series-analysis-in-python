@@ -188,9 +188,8 @@ def main(plot: bool = False) -> None:
             fig.tight_layout()
             output_dir = ensure_output_dir(config)
             fig.savefig(output_dir / "darts_forecast.png", dpi=300, bbox_inches="tight")
-        plt.close(fig)
-            logger.info(f"\nPlot saved to: {output_dir / 'darts_forecast.png'}")
             plt.close(fig)
+            logger.info(f"\nPlot saved to: {output_dir / 'darts_forecast.png'}")
 
     logger.info("\n Darts analysis complete")
 
