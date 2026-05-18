@@ -4,28 +4,17 @@
 from __future__ import annotations
 
 import logging
-import sys
-from pathlib import Path
-
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
-logger = logging.getLogger(__name__)
-# Add src to path
-
 from dataclasses import dataclass
-from typing import Dict, Iterable, List, Optional
+from pathlib import Path
+from typing import Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from darts import TimeSeries
 from darts.models import ARIMA, ExponentialSmoothing, NaiveSeasonal, Theta
-from matplotlib.ticker import MaxNLocator, StrMethodFormatter
 from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import TimeSeriesSplit
-
-# Import consolidated utilities (signalplot already applied in src/__init__.py)
 from src import (
     ensure_output_dir,
     get_output_dir,
@@ -33,6 +22,16 @@ from src import (
     load_time_series,
     save_plot,
 )
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
+# Add src to path
+
+
+
+# Import consolidated utilities (signalplot already applied in src/__init__.py)
 
 MODEL_REGISTRY = {
     "ARIMA": ARIMA,
@@ -56,10 +55,9 @@ def load_series(config: dict) -> pd.Series:
     """Load time series using consolidated loader."""
     series = load_time_series(
         config["data"]["input_file"],
-        date_column=config["data"].get("date_col", "date"),
-        value_column=config["data"].get("value_col", "value"),
+        date_col=config["data"].get("date_col", "date"),
+        value_col=config["data"].get("value_col", "value"),
     )
-
     freq = config["data"].get("freq")
     if freq:
         series = series.asfreq(freq)
@@ -85,24 +83,20 @@ def rolling_origin_eval(
     maes = []
     last_true = None
     last_pred = None
-
     for train_idx, _ in splitter.split(idx):
         end_idx = train_idx[-1]
         train_ts = ts[: end_idx + 1]
         future_ts = ts[end_idx + 1 : end_idx + 1 + horizon]
-
         if len(future_ts) < horizon:
             continue
 
         model = model_factory()
         model.fit(train_ts)
         forecast = model.predict(horizon)
-
         mae_val = mean_absolute_error(
             future_ts.values().flatten(), forecast.values().flatten()
         )
         maes.append(mae_val)
-
         last_true = future_ts
         last_pred = forecast
 
@@ -119,17 +113,13 @@ def main(plot: bool = False) -> None:
     np.random.seed(42)
     """Main execution function."""
     script_dir = Path(__file__).parent
-
     # Load configuration using consolidated loader
     config = load_config()
-
     # Load series
     series = load_series(config)
     logger.info(f"Loaded {len(series)} data points")
-
     # Convert to Darts TimeSeries
     ts = TimeSeries.from_series(series)
-
     # Evaluate models (support legacy and nested config layouts)
     if "model" in config:
         horizon = config["model"]["horizon"]
@@ -157,12 +147,10 @@ def main(plot: bool = False) -> None:
     logger.info(
         f"\nBest model: {best_result.model_name} (MAE: {best_result.mean_mae:.4f})"
     )
-
     # Create visualization
     if best_result.y_true is not None and best_result.y_pred is not None:
         if plot:
             fig, ax = plt.subplots(figsize=(10, 5))
-
             # Plot history
             history = ts[-100:] if len(ts) > 100 else ts
             ax.plot(
@@ -173,7 +161,6 @@ def main(plot: bool = False) -> None:
                 label="History",
                 alpha=0.8,
             )
-
             # Plot actual and forecast
             ax.plot(
                 best_result.y_true.time_index,
@@ -191,7 +178,6 @@ def main(plot: bool = False) -> None:
                 label=f"{best_result.model_name} Forecast",
                 alpha=0.8,
             )
-
             ax.set_title(
                 f"Best Model: {best_result.model_name} (MAE: {best_result.mean_mae:.4f})"
             )
@@ -199,10 +185,10 @@ def main(plot: bool = False) -> None:
             ax.set_ylabel("Value")
             ax.legend(loc="best")
             ax.grid(True, alpha=0.3)
-
             fig.tight_layout()
-            output_dir = ensure_output_dir(get_output_dir(config, script_dir))
-            save_plot(fig, output_dir / "darts_forecast.png", dpi=300)
+            output_dir = ensure_output_dir(config)
+            fig.savefig(output_dir / "darts_forecast.png", dpi=300, bbox_inches="tight")
+        plt.close(fig)
             logger.info(f"\nPlot saved to: {output_dir / 'darts_forecast.png'}")
             plt.close(fig)
 
